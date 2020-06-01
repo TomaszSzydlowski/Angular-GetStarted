@@ -7,8 +7,6 @@ import { IProduct } from './products';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
-
-
   imageWidth: number = 50;
   imageMargin: number = 2;
   pageTitle: string = 'Product List';
@@ -63,9 +61,13 @@ export class ProductListComponent implements OnInit {
     },
   ];
 
-  constructor(){
-    this.filteredProducts=this.products;
-    this.listFilter='cart';
+  constructor() {
+    this.filteredProducts = this.products;
+    this.listFilter = 'cart';
+  }
+
+  onRatingClicked(message:string):void{
+    this.pageTitle='Product List: ' + message;
   }
 
   toggleImage(): void {
