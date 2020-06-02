@@ -1,6 +1,7 @@
+import { ProductService } from './product.service';
 import { IProduct } from './products';
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   templateUrl: './product-detail.component.html',
@@ -9,26 +10,23 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class ProductDetailComponent implements OnInit {
   pageTitle: string = 'Product Detail';
   product: IProduct | undefined
+  errorMessage: string;
 
-  constructor(private route:ActivatedRoute, private router:Router) { }
+  constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) { }
 
   ngOnInit(): void {
-    let id= +this.route.snapshot.paramMap.get('id');
-    this.pageTitle +=`: ${id}`;
+    let id = +this.route.snapshot.paramMap.get('id');
+    this.pageTitle += `: ${id}`;
 
-    this.product= {
-      "productId": id,
-      "productName": "Garden Cart",
-      "productCode": "GDN-0023",
-      "releaseDate": "March 18, 2019",
-      "description": "15 gallon capacity rolling garden cart",
-      "price": 32.99,
-      "starRating": 4.2,
-      "imageUrl": "assets/images/garden_cart.png"
-    }
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.product = products.find((product: IProduct) => product.productId === id)
+      },
+      error: err => this.errorMessage = err
+    });
   }
 
-  onBack():void{
+  onBack(): void {
     this.router.navigate(['/products']);
   }
 
